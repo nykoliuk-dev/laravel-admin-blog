@@ -1,9 +1,26 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
-});
+Route::get('/', [HomeController::class, 'index']);
+
+Route::resource('posts', PostController::class)
+    ->scoped([
+        'post' => 'slug',
+    ])
+    ->only([
+    'index', 'show', 'create', 'store',
+]);
+
+Route::resource('posts.comments', CommentController::class)->only([
+    'store',
+]);
 
 require __DIR__.'/auth.php';
+
+Route::fallback(function () {
+    abort(404, 'Oops! Page not found...');
+});
