@@ -11,20 +11,22 @@ class ImportOldBlogData extends Command
      *
      * @var string
      */
-    protected $signature = 'app:import-old-blog-data';
+    protected $signature = 'blog:import-old';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Import data from old blog database';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        //
+        $this->info('Import started');
+
+        return Command::SUCCESS;
     }
 }
