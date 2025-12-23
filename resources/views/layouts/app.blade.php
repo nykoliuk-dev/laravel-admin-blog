@@ -31,7 +31,7 @@
                         <nav class="col-md-6 col-12 tm-nav">
                             <ul class="tm-nav-ul">
                                 <li class="tm-nav-li">
-                                    <a href="{{ route('main.index') }}" class="tm-nav-link {{ Route::is('main.index') ? 'active' : '' }}">Home</a>
+                                    <a href="{{ route('home') }}" class="tm-nav-link {{ Route::is('home') ? 'active' : '' }}">Home</a>
                                 </li>
                                 <li class="tm-nav-li">
                                     <a href="{{ route('posts.index') }}" class="tm-nav-link {{ Route::is('posts.*') ? 'active' : '' }}">Blog</a>
