@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 
+Route::view('/about', 'pages.about')->name('pages.about');
+Route::view('/contact', 'pages.contact')->name('pages.contact');
+
 Route::resource('posts', PostController::class)
     ->scoped([
         'post' => 'slug',
