@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -11,7 +14,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::latest()->get();
+
+        return view('posts.index', [
+            'title' => 'Список постов',
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -19,7 +27,14 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        return view('posts.create', [
+            'title' => 'Добавить статью',
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
     /**
