@@ -69,7 +69,7 @@
     $(document).ready(function(){
         // Handle click on paging links
         $('.tm-paging-link').click(function(e){
-            e.preventDefault();
+            //e.preventDefault();
 
             var page = $(this).text().toLowerCase();
             $('.tm-gallery-page').addClass('hidden');
