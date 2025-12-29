@@ -90,6 +90,8 @@
                 <div id="comment-message" class="mb-4 hidden p-3 rounded text-white font-bold"></div>
 
                 <form id="comment-form" action="{{ route('posts.comments.store', $post) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <div class="mb-4">
                         <label for="content" class="block text-gray-700 font-medium mb-2">Ваш комментарий:</label>
                         <textarea id="content" name="content" rows="4" class="w-full p-3 border border-gray-300 rounded focus:ring-yellow-500 focus:border-yellow-500" required></textarea>
