@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -27,7 +29,30 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'post_id'      => 'required|integer|exists:posts,id',
+            'content'      => 'required|min:3|max:2000',
+        ];
+
+        $validated = $request->validate($rules);
+
+        $validated['user_id'] = auth()->id();
+
+        try {
+            $comment = Comment::create($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Комментарий успешно добавлен!",
+            ], 201);
+        } catch (\Throwable $e) {
+            Log::error($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Ошибка при создании комментария.',
+            ], 500);
+        }
     }
 
     /**
