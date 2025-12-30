@@ -49,6 +49,12 @@ class PostController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        if (!request()->expectsJson()) {
+            return response()->json([
+                'message' => 'JSON requests only'
+            ], 406);
+        }
+
         $rules = [
             'title'   => 'required|min:3',
             'content' => 'required',

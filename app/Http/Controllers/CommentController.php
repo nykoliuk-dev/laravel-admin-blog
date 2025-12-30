@@ -29,6 +29,12 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
+        if (!request()->expectsJson()) {
+            return response()->json([
+                'message' => 'JSON requests only'
+            ], 406);
+        }
+
         $rules = [
             'post_id'      => 'required|integer|exists:posts,id',
             'content'      => 'required|min:3|max:2000',
