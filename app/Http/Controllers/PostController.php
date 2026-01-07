@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
@@ -47,7 +48,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StorePostRequest $request): JsonResponse
     {
         if (!request()->expectsJson()) {
             return response()->json([
@@ -55,21 +56,7 @@ class PostController extends Controller
             ], 406);
         }
 
-        $rules = [
-            'title'   => 'required|min:3',
-            'content' => 'required',
-            'file'    => 'required|image|max:1024',
-
-            // === Categories ===
-            'categories'      => 'array',
-            'categories.*'    => 'integer|min:1',
-
-            // === Tags ===
-            'tags'            => 'array',
-            'tags.*'          => 'integer|min:1',
-        ];
-
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
 
         $file = $request->file('file');
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
@@ -77,6 +64,7 @@ class PostController extends Controller
             public_path('assets/img/gallery'),
             $filename
         );
+
         $validated['user_id'] = auth()->id();
 
         try {

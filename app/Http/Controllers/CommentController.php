@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +28,7 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
         if (!request()->expectsJson()) {
             return response()->json([
@@ -35,12 +36,7 @@ class CommentController extends Controller
             ], 406);
         }
 
-        $rules = [
-            'post_id'      => 'required|integer|exists:posts,id',
-            'content'      => 'required|min:3|max:2000',
-        ];
-
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
 
         $validated['user_id'] = auth()->id();
 
