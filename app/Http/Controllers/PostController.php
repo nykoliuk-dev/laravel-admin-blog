@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Post\CreatePostAction;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
-use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -48,9 +46,9 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request): JsonResponse
+    public function store(StorePostRequest $request, CreatePostAction $action): JsonResponse
     {
-        if (!request()->expectsJson()) {
+        if (!$request->expectsJson()) {
             return response()->json([
                 'message' => 'JSON requests only'
             ], 406);
@@ -64,26 +62,16 @@ class PostController extends Controller
             public_path('assets/img/gallery'),
             $filename
         );
+        $validated['image_name']  = $filename;
 
         $validated['user_id'] = auth()->id();
 
         try {
-            DB::transaction(function () use ($validated, $request, $filename) {
-                $post = Post::create([
-                    'title'      => $validated['title'],
-                    'slug'       => Str::slug($validated['title']),
-                    'content'    => $validated['content'],
-                    'image_name' => $filename,
-                    'user_id'    => $validated['user_id'],
-                ]);
-
-                $post->categories()->sync($validated['categories'] ?? []);
-                $post->tags()->sync($validated['tags'] ?? []);
-            });
+            $post = $action->execute($validated);
 
             return response()->json([
                 'success' => true,
-                'message' => "Пост {$validated['user_id']} успешно добавлен!",
+                'message' => "Пост {$post->id} успешно добавлен!",
             ]);
         } catch (\Throwable $e) {
             Log::error($e);
