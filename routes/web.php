@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\StoreCommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,9 +18,7 @@ Route::resource('posts', PostController::class)
     'index', 'show', 'create', 'store',
 ]);
 
-Route::resource('posts.comments', CommentController::class)->only([
-    'store',
-]);
+Route::post('/comments', StoreCommentController::class);
 
 require __DIR__.'/auth.php';
 
