@@ -21,7 +21,7 @@
         <!-- Левая колонка: Изображение и Метаданные -->
         <div class="col-md-6">
             <figure class="tm-description-figure">
-                <img src="{{ asset("assets/img/gallery/{$post->image_name}") }}" alt="Изображение поста" class="img-fluid rounded" />
+                <img src="{{ $post->image_url }}" alt="Изображение поста" class="img-fluid rounded" />
             </figure>
 
             <div class="mt-4 p-3 bg-gray-100 rounded shadow-sm">

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
+    public const UPLOAD_DIRECTORY = 'posts';
     protected $fillable = [
         'title',
         'slug',
@@ -33,6 +36,15 @@ class Post extends Model
             'post_category',
             'post_id',
             'category_id',
+        );
+    }
+
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->image_name
+                ? Storage::url(self::UPLOAD_DIRECTORY . '/' . $this->image_name)
+                : asset('assets/img/default-post.jpg'),
         );
     }
 }

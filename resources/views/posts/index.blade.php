@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-6">
             <figure class="tm-description-figure">
-                <img src="{{ asset("assets/img/gallery/{$post->image_name}") }}" alt="Image" class="img-fluid" />
+                <img src="{{ $post->image_url }}" alt="Image" class="img-fluid" />
             </figure>
         </div>
         <div class="col-md-6">
