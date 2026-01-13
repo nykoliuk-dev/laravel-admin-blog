@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Post\CreatePostAction;
+use App\Actions\Post\PostData;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
@@ -10,7 +11,6 @@ use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PostController extends Controller
@@ -54,20 +54,16 @@ class PostController extends Controller
             ], 406);
         }
 
-        $validated = $request->validated();
-
-        $file = $request->file('file');
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $file->move(
-            public_path('assets/img/gallery'),
-            $filename
-        );
-        $validated['image_name']  = $filename;
-
-        $validated['user_id'] = auth()->id();
-
         try {
-            $post = $action->execute($validated);
+            $postData = new PostData(
+                title: $request->validated('title'),
+                content: $request->validated('content'),
+                userId: auth()->id(),
+                file: $request->file('file'),
+                categories: $request->validated('categories', []),
+                tags: $request->validated('tags', [])
+            );
+            $post = $action->execute($postData);
 
             return response()->json([
                 'success' => true,
