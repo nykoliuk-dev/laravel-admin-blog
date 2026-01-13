@@ -28,7 +28,7 @@
             <div class="tm-description-box">
                 <h4 class="tm-gallery-title">{{ $post->title }}</h4>
                 <p class="tm-mb-45">{{ Str::limit($post->content, 150) }}</p>
-                <a href="{{ route('posts.show', ['post' => $post->slug]) }}" class="tm-btn tm-btn-default tm-right">Read More</a>
+                <a href="{{ route('posts.show', ['post' => $post->slug->getValue()]) }}" class="tm-btn tm-btn-default tm-right">Read More</a>
             </div>
         </div>
     </div>
