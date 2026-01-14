@@ -62,7 +62,7 @@ class PostController extends Controller
             categories: $request->validated('categories', []),
             tags: $request->validated('tags', [])
         );
-        $post = $action->execute($postData);
+        $post = $action->handle($postData);
 
         return response()->json([
             'success' => true,

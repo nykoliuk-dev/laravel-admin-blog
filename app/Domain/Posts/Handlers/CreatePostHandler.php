@@ -1,23 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Actions\Post;
+namespace App\Domain\Posts\Handlers;
 
+use App\Domain\Posts\Commands\CreatePostCommand;
 use App\Models\Post;
 use App\ValueObjects\Slug;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class CreatePostAction
+class CreatePostHandler
 {
-    public function execute(PostData $data): Post
+    public function handle(CreatePostCommand $data): Post
     {
         return DB::transaction(function () use ($data) {
             $filename = Str::uuid() . '.' . $data->file->getClientOriginalExtension();
-            $path = Post::UPLOAD_DIRECTORY . '/' . now()->format('Y/m');
+            $subPath = now()->format('Y/m');
+            $path = Post::UPLOAD_DIRECTORY . '/' . $subPath;
             Storage::disk('public')->putFileAs($path, $data->file, $filename);
-            $imagePath = now()->format('Y/m') . '/' . $filename;
+            $imagePath = $subPath . '/' . $filename;
 
             $post = Post::create([
                 'title'      => $data->title,
