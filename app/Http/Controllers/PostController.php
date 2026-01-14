@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Post\CreatePostAction;
-use App\Actions\Post\PostData;
+use App\Domain\Posts\Commands\CreatePostCommand;
+use App\Domain\Posts\Handlers\CreatePostHandler;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
@@ -46,7 +46,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request, CreatePostAction $action): JsonResponse
+    public function store(StorePostRequest $request, CreatePostHandler $action): JsonResponse
     {
         if (!$request->expectsJson()) {
             return response()->json([
@@ -54,29 +54,20 @@ class PostController extends Controller
             ], 406);
         }
 
-        try {
-            $postData = new PostData(
-                title: $request->validated('title'),
-                content: $request->validated('content'),
-                userId: auth()->id(),
-                file: $request->file('file'),
-                categories: $request->validated('categories', []),
-                tags: $request->validated('tags', [])
-            );
-            $post = $action->execute($postData);
+        $postData = new CreatePostCommand(
+            title: $request->validated('title'),
+            content: $request->validated('content'),
+            userId: auth()->id(),
+            file: $request->file('file'),
+            categories: $request->validated('categories', []),
+            tags: $request->validated('tags', [])
+        );
+        $post = $action->execute($postData);
 
-            return response()->json([
-                'success' => true,
-                'message' => "Пост {$post->id} успешно добавлен!",
-            ]);
-        } catch (\Throwable $e) {
-            Log::error($e);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Ошибка при создании поста.',
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => "Пост {$post->id} успешно добавлен!",
+        ]);
     }
 
     /**
@@ -93,4 +84,37 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Post $post): View
+    {
+        $post->load('categories', 'tags');
+        $categories = Category::all();
+        $tags = Tag::all();
+
+        return view('posts.edit', [
+            'title' => $post->title,
+            'post' => $post,
+            'categories' => $categories,
+            'tags' => $tags,
+            'comments' => $post->comments,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 }
