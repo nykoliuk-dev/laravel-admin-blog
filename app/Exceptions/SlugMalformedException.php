@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-final class SlugMalformedException extends \InvalidArgumentException
+final class SlugMalformedException extends DomainException
 {
     public static function fromString(string $slug): self
     {
