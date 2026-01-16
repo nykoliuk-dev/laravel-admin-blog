@@ -110,9 +110,24 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, UpdatePostHandler $action)
+    public function update(UpdatePostRequest $request, string $slug, UpdatePostHandler $action)
     {
+        $postData = new UpdatePostCommand(
+            currentSlug: $slug,
+            title: $request->validated('title'),
+            content: $request->validated('content'),
+            userId: auth()->id(),
+            file: $request->file('file'),
+            categories: $request->validated('categories', []),
+            tags: $request->validated('tags', [])
+        );
 
+        $post = $action->handle($postData);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Пост {$post->id} успешно обновлен!",
+        ]);
     }
 
     /**
