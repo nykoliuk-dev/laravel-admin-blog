@@ -3,18 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Posts\Commands\CreatePostCommand;
+use App\Domain\Posts\Commands\UpdatePostCommand;
 use App\Domain\Posts\Handlers\CreatePostHandler;
+use App\Domain\Posts\Handlers\UpdatePostHandler;
+use App\Http\Middleware\EnsureJsonRequest;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\View;
 
-class PostController extends Controller
+class PostController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(EnsureJsonRequest::class, only: ['store', 'update']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -48,12 +59,6 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request, CreatePostHandler $action): JsonResponse
     {
-        if (!$request->expectsJson()) {
-            return response()->json([
-                'message' => 'JSON requests only'
-            ], 406);
-        }
-
         $postData = new CreatePostCommand(
             title: $request->validated('title'),
             content: $request->validated('content'),
@@ -105,9 +110,9 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(UpdatePostRequest $request, UpdatePostHandler $action)
     {
-        //
+
     }
 
     /**
