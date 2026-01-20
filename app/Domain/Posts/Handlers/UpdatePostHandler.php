@@ -33,8 +33,8 @@ class UpdatePostHandler
 
             $post->save();
 
-            $post->categories()->sync($data->categories ?? []);
-            $post->tags()->sync($data->tags ?? []);
+            $post->categories()->sync($command->categories ?? []);
+            $post->tags()->sync($command->tags ?? []);
 
             return $post;
         });
