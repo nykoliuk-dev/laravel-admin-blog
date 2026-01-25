@@ -20,6 +20,7 @@ Route::resource('posts', PostController::class)
 ]);
 
 Route::post('/posts/{post}/comments', StoreCommentController::class)
+    ->middleware('EnsureJsonRequest')
     ->name('posts.comments.store');
 
 Route::get('/dashboard', function () {
