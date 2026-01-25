@@ -59,6 +59,9 @@
                 url: form.attr('action'),
                 type: 'POST',
                 data: form.serialize(),
+                headers: {
+                    'Accept': 'application/json'
+                },
                 success: function (response) {
                     messages
                         .removeClass('tm-text-danger')
