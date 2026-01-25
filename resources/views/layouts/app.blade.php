@@ -42,6 +42,33 @@
                                 <li class="tm-nav-li">
                                     <a href="{{ route('pages.contact') }}" class="tm-nav-link {{ Route::is('pages.contact') ? 'active' : '' }}">Contact</a>
                                 </li>
+                                @auth
+                                    <li class="tm-nav-li nav-user">
+                                        <span>{{ 'Account' }}</span>
+                                        <ul class="nav-dropdown">
+                                            <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+
+                                            @if(auth()->user()->hasRole(\App\Enums\RoleSlug::ADMIN))
+                                                <li><a href="">Admin</a></li>
+                                            @endif
+
+                                            <li>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit">Logout</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endauth
+                                @guest
+                                    <li class="tm-nav-li">
+                                        <a href="{{ route('login') }}" class="tm-nav-link {{ Route::is('login') ? 'active' : '' }}">Login</a>
+                                    </li>
+                                    <li class="tm-nav-li">
+                                        <a href="{{ route('register') }}" class="tm-nav-link {{ Route::is('register') ? 'active' : '' }}">Register</a>
+                                    </li>
+                                @endguest
                             </ul>
                         </nav>
                     </div>
