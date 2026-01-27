@@ -46,10 +46,10 @@
                                     <li class="tm-nav-li nav-user">
                                         <span>{{ 'Account' }}</span>
                                         <ul class="nav-dropdown">
-                                            <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                                            <li><a href="">Dashboard</a></li>
 
                                             @if(auth()->user()->hasRole(\App\Enums\RoleSlug::ADMIN))
-                                                <li><a href="">Admin</a></li>
+                                                <li><a href="{{ route('admin') }}">Admin</a></li>
                                             @endif
 
                                             <li>
