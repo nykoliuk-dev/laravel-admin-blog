@@ -59,4 +59,11 @@ class User extends Authenticatable
             ->where('slug', $role->value)
             ->exists();
     }
+
+    public function isAdmin() :bool
+    {
+        return $this->roles()
+            ->where('slug', RoleSlug::ADMIN->value)
+            ->exists();
+    }
 }
