@@ -8,6 +8,7 @@
     <p class="col-12 text-center">Просмотр статьи о еде и кулинарии.</p>
 </header>
 
+@can('create')
 <div class="tm-paging-links">
     <nav>
         <ul>
@@ -15,6 +16,7 @@
         </ul>
     </nav>
 </div>
+@endcan
 
 <div class="tm-section tm-container-inner">
     <div class="row">
