@@ -62,6 +62,27 @@
         </div>
     </div>
 
+    <div class="row">
+        @can('edit')
+        <div class="col-lg-6">
+            <div class="tm-feature">
+                <i class="fas fa-4x fa-pepper-hot tm-feature-icon"></i>
+                <p class="tm-feature-description">Donec sed orci fermentum, convallis lacus id, tempus elit. Sed eu neque accumsan, porttitor arcu a, interdum est. Donec in risus eu ante.</p>
+                <a href="{{ route('post.edit') }}" class="tm-btn tm-btn-primary">Edit</a>
+            </div>
+        </div>
+        @endcan
+        @can('delete')
+        <div class="col-lg-6">
+            <div class="tm-feature">
+                <i class="fas fa-4x fa-cocktail tm-feature-icon"></i>
+                <p class="tm-feature-description">Morbi in dolor finibus, consequat nisl eget, pretium nunc. Maecenas pretium rutrum molestie. Duis dignissim egestas turpis sit.</p>
+                <a href="{{ route('post.destroy') }}" class="tm-btn tm-btn-danger">Delete</a>
+            </div>
+        </div>
+        @endcan
+    </div>
+
     <!-- Секция Комментарии -->
     <div class="row mt-10">
         <div class="col-12" id="comments-section">
