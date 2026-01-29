@@ -13,10 +13,7 @@ Route::view('/contact', 'pages.contact')->name('pages.contact');
 Route::resource('posts', PostController::class)
     ->scoped([
         'post' => 'slug',
-    ])
-    ->only([
-    'index', 'show', 'create', 'store',
-]);
+    ]);
 
 Route::post('/posts/{post}/comments', StoreCommentController::class)
     ->middleware('EnsureJsonRequest')
