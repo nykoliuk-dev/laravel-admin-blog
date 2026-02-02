@@ -15,6 +15,7 @@ use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class PostController extends Controller implements HasMiddleware
@@ -44,6 +45,8 @@ class PostController extends Controller implements HasMiddleware
      */
     public function create(): View
     {
+        Gate::authorize('create', Post::class);
+
         $categories = Category::all();
         $tags = Tag::all();
 
@@ -59,6 +62,8 @@ class PostController extends Controller implements HasMiddleware
      */
     public function store(StorePostRequest $request, CreatePostHandler $action): JsonResponse
     {
+        Gate::authorize('create', Post::class);
+
         $postData = new CreatePostCommand(
             title: $request->validated('title'),
             content: $request->validated('content'),
@@ -94,6 +99,8 @@ class PostController extends Controller implements HasMiddleware
      */
     public function edit(Post $post): View
     {
+        Gate::authorize('update', $post);
+
         $post->load('categories', 'tags');
         $categories = Category::all();
         $tags = Tag::all();
@@ -110,10 +117,12 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, string $slug, UpdatePostHandler $action)
+    public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $action)
     {
+        Gate::authorize('update', $post);
+
         $postData = new UpdatePostCommand(
-            currentSlug: $slug,
+            currentPost: $post,
             title: $request->validated('title'),
             content: $request->validated('content'),
             userId: auth()->id(),
@@ -133,8 +142,10 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        Gate::authorize('delete', Post::class);
+
+        $post->delete();
     }
 }
