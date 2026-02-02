@@ -19,9 +19,9 @@ class UpdatePostHandler
 
     public function handle(UpdatePostCommand $command): Post
     {
-        $post = Post::where('slug', $command->currentSlug)->firstOrFail();
-
-        return DB::transaction(function () use ($command, $post) {
+        return DB::transaction(function () use ($command) {
+            $post = $command->currentPost;
+            
             $post->title = $command->title;
             $post->content = $command->content;
             $post->slug = new Slug(Str::slug($command->title));
