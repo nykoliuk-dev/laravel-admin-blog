@@ -8,7 +8,7 @@
     <p class="col-12 text-center">Просмотр статьи о еде и кулинарии.</p>
 </header>
 
-@can('create')
+@can('create', \App\Models\Post::class)
 <div class="tm-paging-links">
     <nav>
         <ul>
@@ -63,21 +63,25 @@
     </div>
 
     <div class="row">
-        @can('edit')
+        @can('update', $post)
         <div class="col-lg-6">
             <div class="tm-feature">
                 <i class="fas fa-4x fa-pepper-hot tm-feature-icon"></i>
                 <p class="tm-feature-description">Donec sed orci fermentum, convallis lacus id, tempus elit. Sed eu neque accumsan, porttitor arcu a, interdum est. Donec in risus eu ante.</p>
-                <a href="{{ route('post.edit') }}" class="tm-btn tm-btn-primary">Edit</a>
+                <a href="{{ route('posts.edit', ['post' => $post->slug->getValue()]) }}" class="tm-btn tm-btn-primary">Edit</a>
             </div>
         </div>
         @endcan
-        @can('delete')
+        @can('delete', \App\Models\Post::class)
         <div class="col-lg-6">
             <div class="tm-feature">
                 <i class="fas fa-4x fa-cocktail tm-feature-icon"></i>
                 <p class="tm-feature-description">Morbi in dolor finibus, consequat nisl eget, pretium nunc. Maecenas pretium rutrum molestie. Duis dignissim egestas turpis sit.</p>
-                <a href="{{ route('post.destroy') }}" class="tm-btn tm-btn-danger">Delete</a>
+                <form method="POST" action="{{ route('posts.destroy', ['post' => $post->slug->getValue()]) }}">
+                    @csrf
+                    @method('delete')
+                    <button class="tm-btn tm-btn-danger">Delete</button>
+                </form>
             </div>
         </div>
         @endcan
@@ -121,7 +125,7 @@
                         <div id="content-error" class="text-red-500 text-sm mt-1"></div>
                     </div>
 
-                    <button type="submit" class="tm-paging-item">
+                    <button type="submit" class="tm-btn tm-btn-success">
                         Отправить комментарий
                     </button>
                 </form>
