@@ -16,7 +16,7 @@ Route::resource('posts', PostController::class)
     ]);
 
 Route::post('/posts/{post}/comments', StoreCommentController::class)
-    ->middleware('EnsureJsonRequest')
+    ->middleware('json')
     ->name('posts.comments.store');
 
 Route::fallback(function () {
