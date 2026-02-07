@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
+use App\Domain\Tags\Queries\TagListQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
@@ -11,13 +13,18 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request, TagListQuery $query): View
     {
-        $tags = Tag::query()->latest()->get();
+        $tagPaginator = $query->execute(
+            page: (int) $request->query('page', 1),
+            perPage: (int) $request->query('perPage', 3),
+            path: $request->url(),
+            query: $request->query(),
+        );
 
         return view('admin.tags.index', [
             'title' => 'Tag List Page',
-            'tags' => $tags,
+            'tags' => $tagPaginator,
         ]);
     }
 
