@@ -49,8 +49,8 @@
                                             <tr>
                                                 <td>{{ $tag->id }}.</td>
                                                 <td>{{ $tag->name }}</td>
-                                                <td>{{ $tag->slug }}</td>
-                                                <td></td>
+                                                <td>{{ $tag->slug }}
+                                                <td>{{ $tag->usage }}</td>
                                                 <td class="d-flex gap-2">
                                                     <a href="" class="btn btn-info btn-sm">
                                                         <i class="fas fa-pencil-alt"></i>
@@ -69,15 +69,9 @@
                                     </table>
                                 </div>
                                 <!-- /.card-body -->
-                                <div class="card-footer clearfix">
-                                    <ul class="pagination pagination-sm m-0 float-right">
-                                        <li class="page-item"><a class="page-link" href="#">«</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">»</a></li>
-                                    </ul>
-                            </div>
+                                @if ($tags->hasPages())
+                                    {{ $tags->links('components.pagination.admin') }}
+                                @endif
                             @else
                                 <p>No tags yet...</p>
                             @endif
