@@ -49,7 +49,7 @@
                                             <li><a href="">Dashboard</a></li>
 
                                             @if(auth()->user()->hasRole(\App\Enums\RoleSlug::ADMIN))
-                                                <li><a href="{{ route('admin') }}">Admin</a></li>
+                                                <li><a href="{{ route('admin.index') }}">Admin</a></li>
                                             @endif
 
                                             <li>
