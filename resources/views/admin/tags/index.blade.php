@@ -13,8 +13,8 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Blank Page</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Tags</li>
                         </ol>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         <div class="card">
                             <div class="card-header d-flex">
                                 <h3 class="card-title">Tags Table</h3>
-                                <a href="" class="btn btn-primary ml-auto">Add tag</a>
+                                <a href="{{ route('tags.create') }}" class="btn btn-primary ml-auto">Add tag</a>
                             </div>
                             <!-- /.card-header -->
                             @if($tags)
@@ -49,13 +49,13 @@
                                             <tr>
                                                 <td>{{ $tag->id }}.</td>
                                                 <td>{{ $tag->name }}</td>
-                                                <td>{{ $tag->slug }}
+                                                <td>{{ $tag->slug->getValue() }}
                                                 <td>{{ $tag->usage }}</td>
                                                 <td class="d-flex gap-2">
-                                                    <a href="" class="btn btn-info btn-sm">
+                                                    <a href="{{ route('tags.edit', ['tag' => $tag->slug->getValue()]) }}" class="btn btn-info btn-sm">
                                                         <i class="fas fa-pencil-alt"></i>
                                                     </a>
-                                                    <form action="" method="POST">
+                                                    <form action="{{ route('tags.destroy', ['tag' => $tag->slug->getValue()]) }}" method="POST">
                                                         @csrf
                                                         @method('delete')
                                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
