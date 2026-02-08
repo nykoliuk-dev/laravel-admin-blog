@@ -6,10 +6,11 @@ use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
+    ->name('admin.')
     ->middleware(['auth', 'admin'])
     ->group(function () {
         // Main Page
-        Route::get('/', DashboardController::class)->name('admin');
+        Route::get('/', DashboardController::class)->name('index');
 
 
         // Posts
