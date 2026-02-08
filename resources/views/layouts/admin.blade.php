@@ -288,9 +288,9 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>nav-item menu-is-opening menu-open
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('admin.tags.*') ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ request()->routeIs('admin.tags.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-tags"></i>
                             <p>
                                 Tags
@@ -299,13 +299,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{{ route('admin.tags.index') }}" class="nav-link">
+                                <a href="{{ route('admin.tags.index') }}" class="nav-link {{ request()->routeIs('admin.tags.index') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>General Elements</p>
+                                    <p>All tags</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.tags.create') }}" class="nav-link">
+                                <a href="{{ route('admin.tags.create') }}" class="nav-link {{ request()->routeIs('admin.tags.create') ? 'active' : '' }}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Create</p>
                                 </a>
