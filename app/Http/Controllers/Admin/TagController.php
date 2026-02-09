@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\StoreTagRequest;
+use App\ValueObjects\Slug;
 use Illuminate\Http\Request;
 use App\Domain\Tags\Queries\TagListQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
@@ -39,9 +42,18 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store()
+    public function store(StoreTagRequest $request)
     {
+        $name = $request->validated('name');
 
+        Tag::query()->create([
+            'name' => $name,
+            'slug' => new Slug(Str::slug($name)),
+        ]);
+
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag created successfully');
     }
 
     /**
