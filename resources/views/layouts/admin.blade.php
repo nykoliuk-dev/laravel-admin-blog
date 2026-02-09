@@ -478,6 +478,8 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
+    @include('partials.flash')
+
     @yield('content')
     <!-- /.content-wrapper -->
 
