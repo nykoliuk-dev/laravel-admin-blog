@@ -478,9 +478,11 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    @include('partials.flash')
+    <div class="content-wrapper">
+        @include('partials.flash')
 
-    @yield('content')
+        @yield('content')
+    </div>
     <!-- /.content-wrapper -->
 
     <footer class="main-footer">
