@@ -21,10 +21,10 @@ class UpdatePostHandler
     {
         return DB::transaction(function () use ($command) {
             $post = $command->currentPost;
-            
+
             $post->title = $command->title;
             $post->content = $command->content;
-            $post->slug = new Slug(Str::slug($command->title));
+            $post->slug = Slug::createFromString($command->title);
 
             if($command->file){
                 $this->imageService->delete($post->image_name, Post::UPLOAD_DIRECTORY);

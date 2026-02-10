@@ -48,7 +48,7 @@ class TagController extends Controller
 
         Tag::query()->create([
             'name' => $name,
-            'slug' => new Slug(Str::slug($name)),
+            'slug' => Slug::createFromString($name),
         ]);
 
         return redirect()

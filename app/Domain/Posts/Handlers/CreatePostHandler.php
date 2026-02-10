@@ -23,7 +23,7 @@ class CreatePostHandler
 
             $post = Post::create([
                 'title'      => $data->title,
-                'slug'       => new Slug(Str::slug($data->title)),
+                'slug'       => Slug::createFromString($data->title),
                 'content'    => $data->content,
                 'image_name' => $imagePath,
                 'user_id'    => $data->userId,
