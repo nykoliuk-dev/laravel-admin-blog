@@ -7,6 +7,7 @@ use App\Domain\Tags\Handlers\UpdateTagHandler;
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
 use App\ValueObjects\Slug;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Domain\Tags\Queries\TagListQuery;
 use App\Http\Controllers\Controller;
@@ -44,7 +45,7 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTagRequest $request)
+    public function store(StoreTagRequest $request): RedirectResponse
     {
         $name = $request->validated('name');
 
@@ -80,7 +81,7 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTagRequest $request, Tag $tag, UpdateTagHandler $handler)
+    public function update(UpdateTagRequest $request, Tag $tag, UpdateTagHandler $handler): RedirectResponse
     {
         $command = new UpdateTagCommand(
             currentTag: $tag,
@@ -98,8 +99,12 @@ class TagController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy()
+    public function destroy(Tag $tag): RedirectResponse
     {
+        $tag->delete();
 
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag deleted successfully');
     }
 }
