@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Tags\Commands\UpdateTagCommand;
+use App\Domain\Tags\Handlers\UpdateTagHandler;
 use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\ValueObjects\Slug;
 use Illuminate\Http\Request;
 use App\Domain\Tags\Queries\TagListQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
@@ -67,17 +69,30 @@ class TagController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(Tag $tag): View
     {
-
+        return view('admin.tags.edit', [
+            'title' => 'AdminLTE 3 | Edit Tag Page',
+            'tag' => $tag,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update()
+    public function update(UpdateTagRequest $request, Tag $tag, UpdateTagHandler $handler)
     {
+        $command = new UpdateTagCommand(
+            currentTag: $tag,
+            name: $request->validated('name'),
+            editSlug: $request->boolean('editSlug'),
+            slug: $request->validated('slug'),
+        );
+        $handler->handle($command);
 
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag updated successfully');
     }
 
     /**
