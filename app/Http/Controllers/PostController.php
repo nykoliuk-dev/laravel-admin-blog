@@ -60,7 +60,7 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request, CreatePostHandler $action): JsonResponse
+    public function store(StorePostRequest $request, CreatePostHandler $postHandler): JsonResponse
     {
         Gate::authorize('create', Post::class);
 
@@ -72,7 +72,7 @@ class PostController extends Controller implements HasMiddleware
             categories: $request->validated('categories', []),
             tags: $request->validated('tags', [])
         );
-        $post = $action->handle($postData);
+        $post = $postHandler->handle($postData);
 
         return response()->json([
             'success' => true,
@@ -117,7 +117,7 @@ class PostController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $action)
+    public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $postHandler)
     {
         Gate::authorize('update', $post);
 
@@ -131,7 +131,7 @@ class PostController extends Controller implements HasMiddleware
             tags: $request->validated('tags', [])
         );
 
-        $post = $action->handle($postData);
+        $post = $postHandler->handle($postData);
 
         return response()->json([
             'success' => true,
