@@ -51,10 +51,13 @@
                                             <td>{{ $tag->slug->getValue() }}
                                             <td>{{ $tag->usage }}</td>
                                             <td class="d-flex gap-2">
-                                                <a href="{{ route('admin.tags.edit', ['tag' => $tag->slug->getValue()]) }}" class="btn btn-info btn-sm">
+                                                <a href="{{ route('admin.tags.show', ['tag' => $tag->slug->getValue()]) }}" class="btn btn-info btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('admin.tags.edit', ['tag' => $tag->slug->getValue()]) }}" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
-                                                <form action="{{ route('admin.tags.destroy', ['tag' => $tag->slug->getValue()]) }}" method="POST">
+                                                <form action="{{ route('admin.tags.destroy', ['tag' => $tag->slug->getValue()]) }}" method="POST" >
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
