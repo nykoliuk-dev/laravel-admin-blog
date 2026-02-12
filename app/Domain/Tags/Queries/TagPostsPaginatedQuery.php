@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class TagPostsPaginatedQuery
 {
-    public function execute(int $page, int $perPage, int $tagId): LengthAwarePaginator
+    public function handle(int $page, int $perPage, int $tagId): LengthAwarePaginator
     {
         return Post::query()
             ->whereRelation('tags', 'post_tag.tag_id', $tagId)

@@ -22,7 +22,7 @@ class TagController extends Controller
      */
     public function index(Request $request, TagListQuery $query): View
     {
-        $tagPaginator = $query->execute(
+        $tagPaginator = $query->handle(
             page: (int) $request->query('page', 1),
             perPage: (int) $request->query('perPage', 3),
             path: $request->url(),
@@ -65,7 +65,7 @@ class TagController extends Controller
      */
     public function show(Request $request, Tag $tag, TagPostsPaginatedQuery $query): View
     {
-        $postPaginator = $query->execute(
+        $postPaginator = $query->handle(
             page: (int) $request->query('page', 1),
             perPage: (int) $request->query('perPage', 3),
             tagId: $tag->id,

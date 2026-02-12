@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class TagListQuery
 {
-    public function execute(int $page, int $perPage, string $path, array $query): LengthAwarePaginator
+    public function handle(int $page, int $perPage, string $path, array $query): LengthAwarePaginator
     {
         $offset = ($page - 1) * $perPage;
 
