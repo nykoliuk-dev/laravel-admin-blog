@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Tags\Commands\UpdateTagCommand;
 use App\Domain\Tags\Handlers\UpdateTagHandler;
+use App\Domain\Tags\Queries\TagPostsPaginatedQuery;
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
 use App\ValueObjects\Slug;
@@ -37,7 +38,7 @@ class TagController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.tags.create');
     }
@@ -62,9 +63,19 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Request $request, Tag $tag, TagPostsPaginatedQuery $query): View
     {
+        $postPaginator = $query->execute(
+            page: (int) $request->query('page', 1),
+            perPage: (int) $request->query('perPage', 3),
+            tagId: $tag->id,
+        );
 
+        return view('admin.tags.show', [
+            'title' => 'Tag List Page',
+            'tag' => $tag,
+            'posts' => $postPaginator,
+        ]);
     }
 
     /**
