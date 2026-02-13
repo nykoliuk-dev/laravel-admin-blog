@@ -12,9 +12,17 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request, CategoryListQuery $query): View
     {
+        $categoryPaginator = $query->handle(
+            page: (int) $request->query('page', 1),
+            perPage: (int) $request->query('perPage', 3),
+        );
 
+        return view('admin.categories.index', [
+            'title' => 'Category List Page',
+            'categories' => $categoryPaginator,
+        ]);
     }
 
     /**
