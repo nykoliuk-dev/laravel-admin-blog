@@ -6,6 +6,8 @@ use App\Domain\Categories\Queries\CategoryListQuery;
 use App\Domain\Categories\Queries\CategoryTreeQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
+use App\Models\Category;
+use App\ValueObjects\Slug;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
@@ -44,9 +46,19 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store()
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
+        $data = $request->validated();
 
+        Category::query()->create([
+            'name' => $data('name'),
+            'slug' => Slug::createFromString($data('name')),
+            'parent_id' => $data('parent_id'),
+        ]);
+
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', 'Category created successfully');
     }
 
     /**
