@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Categories\Queries\CategoryListQuery;
+use App\Domain\Categories\Queries\CategoryTreeQuery;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategoryRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 
@@ -28,9 +31,14 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(CategoryTreeQuery $query): View
     {
+        $categoryTree = $query->handle();
 
+        return view('admin.categories.create', [
+            'title' => 'Create New Category',
+            'categories' => $categoryTree,
+        ]);
     }
 
     /**
