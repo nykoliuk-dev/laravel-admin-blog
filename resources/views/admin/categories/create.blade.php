@@ -43,7 +43,7 @@
                                         class="form-control @error('name') is-invalid @enderror"
                                         id="inputName"
                                         value="{{ old('name') }}"
-                                        placeholder="Enter tag name"
+                                        placeholder="Enter category name"
                                         required>
                                     @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
