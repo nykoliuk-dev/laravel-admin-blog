@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Categories\Commands\UpdateCategoryCommand;
+use App\Domain\Categories\Handlers\UpdateCategoryHandler;
 use App\Domain\Categories\Queries\CategoryListQuery;
 use App\Domain\Categories\Queries\CategoryTreeQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\ValueObjects\Slug;
 use Illuminate\Http\RedirectResponse;
@@ -86,9 +89,20 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update()
+    public function update(UpdateCategoryRequest $request, string $category, UpdateCategoryHandler $handler): RedirectResponse
     {
+        $command = new UpdateCategoryCommand(
+            currentCategorySlug: $category,
+            name: $request->validated('name'),
+            parentId: $request->validated('parent_id'),
+            editSlug: $request->boolean('editSlug'),
+            slug: $request->validated('slug'),
+        );
+        $handler->handle($command);
 
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', 'Category updated successfully');
     }
 
     /**
