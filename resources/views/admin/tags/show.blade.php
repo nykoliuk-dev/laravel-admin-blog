@@ -35,7 +35,7 @@
 
                             <div class="card-tools">
                                 <span class="badge badge-secondary mr-2">
-                                    {{ $posts->total() ?? count($posts) }} posts
+                                    {{ $posts->total() }} posts
                                 </span>
 
                                 <button type="button"
@@ -62,7 +62,7 @@
                             <h3 class="card-title">Tag Posts Table</h3>
 
                             <div class="card-tools">
-                                
+
                             </div>
                         </div>
                         <!-- /.card-header -->
