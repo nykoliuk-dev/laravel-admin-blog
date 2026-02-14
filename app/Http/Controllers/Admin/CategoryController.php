@@ -35,7 +35,7 @@ class CategoryController extends Controller
      */
     public function create(CategoryTreeQuery $query): View
     {
-        $categoryTree = $query->handle();
+        $categoryTree = $query->handle(null);
 
         return view('admin.categories.create', [
             'title' => 'Create New Category',
@@ -72,9 +72,15 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(CategoryTreeQuery $query, Category $category): View
     {
+        $categoryTree = $query->handle($category->id);
 
+        return view('admin.categories.edit', [
+            'title' => 'AdminLTE 3 | Edit Category Page',
+            'currentCategory' => $category,
+            'categoryTree' => $categoryTree,
+        ]);
     }
 
     /**
