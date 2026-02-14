@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Domain\Categories\Commands\UpdateCategoryCommand;
 use App\Domain\Categories\Handlers\UpdateCategoryHandler;
 use App\Domain\Categories\Queries\CategoryListQuery;
+use App\Domain\Categories\Queries\CategoryPostsPaginatedQuery;
 use App\Domain\Categories\Queries\CategoryTreeQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
@@ -67,9 +68,19 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Request $request, Category $category, CategoryPostsPaginatedQuery $query): View
     {
+        $postPaginator = $query->handle(
+            page: (int) $request->query('page', 1),
+            perPage: (int) $request->query('perPage', 3),
+            category: $category,
+        );
 
+        return view('admin.categories.show', [
+            'title' => 'Tag List Page',
+            'category' => $category,
+            'posts' => $postPaginator,
+        ]);
     }
 
     /**
