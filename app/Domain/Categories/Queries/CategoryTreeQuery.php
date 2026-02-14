@@ -12,12 +12,32 @@ final class CategoryTreeQuery
     /**
      * @return CategoryOptionDTO[]
      */
-    public function handle(): array
+    public function handle(?int $excludeId): array
     {
         $categories = Category::query()->get();
         $groupedCats = $categories->groupBy('parent_id');
 
+        if ($excludeId) {
+            $this->removeCategoryAndChildren($groupedCats, $categories, $excludeId);
+        }
+
         return $this->buildTree($groupedCats, null, 0);
+    }
+
+    private function removeCategoryAndChildren(Collection &$groupedCats, Collection $categories, int $excludeId): void
+    {
+        $excludeCat = $categories->firstWhere('id', $excludeId);
+        if (!$excludeCat) {
+            return;
+        }
+
+        if (isset($groupedCats[$excludeCat->parent_id][$excludeCat->id])) {
+            unset($groupedCats[$excludeCat->parent_id][$excludeCat->id]);
+        }
+
+        if (isset($groupedCats[$excludeCat->id])) {
+            unset($groupedCats[$excludeCat->id]);
+        }
     }
 
     /**
