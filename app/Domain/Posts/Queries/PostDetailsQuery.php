@@ -18,16 +18,20 @@ final class PostDetailsQuery
             ->firstOrFail();
 
         $categories = $post->categories
-            ->map(fn ($cat) => new IdNameDTO(
-                id:     $cat->id,
-                name:   $cat->name,
-            ))
+            ->mapWithKeys(fn ($cat) => [
+                $cat->id => new IdNameDTO(
+                    id:   $cat->id,
+                    name: $cat->name,
+                )
+            ])
             ->all();
         $tags = $post->tags
-            ->map(fn ($tag) => new IdNameDTO(
-                id:     $tag->id,
-                name:   $tag->name,
-            ))
+            ->mapWithKeys(fn ($tag) => [
+                $tag->id => new IdNameDTO(
+                    id:   $tag->id,
+                    name: $tag->name,
+                )
+            ])
             ->all();
 
         return new PostDetailsDTO(

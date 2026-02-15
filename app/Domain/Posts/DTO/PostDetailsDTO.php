@@ -14,9 +14,9 @@ final readonly class PostDetailsDTO
         public Slug $slug,
         public string $content,
         public string $imageUrl,
-        /** @var IdNameDTO[] */
+        /** @var array<int, IdNameDTO> */
         public array $categories,
-        /** @var IdNameDTO[] */
+        /** @var array<int, IdNameDTO> */
         public array $tags,
         public int $commentsCount,
     ) {}
