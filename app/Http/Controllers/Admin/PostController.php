@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Categories\Queries\CategoryTreeQuery;
 use App\Domain\Posts\Commands\CreatePostCommand;
+use App\Domain\Posts\Commands\UpdatePostCommand;
 use App\Domain\Posts\Handlers\CreatePostHandler;
+use App\Domain\Posts\Handlers\UpdatePostHandler;
 use App\Domain\Posts\Queries\PostDetailsQuery;
 use App\Domain\Posts\Queries\PostListQuery;
 use App\Domain\Tags\Queries\TagForSelectQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -104,9 +107,23 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update()
+    public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $postHandler): RedirectResponse
     {
+        $postData = new UpdatePostCommand(
+            currentPost: $post,
+            title: $request->validated('title'),
+            content: $request->validated('content'),
+            userId: auth()->id(),
+            file: $request->file('file'),
+            categories: $request->validated('categories', []),
+            tags: $request->validated('tags', [])
+        );
 
+        $post = $postHandler->handle($postData);
+
+        return redirect()
+            ->route('admin.posts.index')
+            ->with('success', 'Post updated successfully');
     }
 
     /**
