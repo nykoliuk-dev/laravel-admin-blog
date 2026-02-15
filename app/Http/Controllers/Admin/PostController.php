@@ -80,10 +80,25 @@ class PostController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * @param string $post slug of the post
      */
-    public function edit()
+    public function edit(
+        string $post,
+        PostDetailsQuery $postQuery,
+        CategoryTreeQuery $categoryQuery,
+        TagForSelectQuery $tagQuery
+    ): View
     {
+        $post = $postQuery->handle($post);
+        $categories = $categoryQuery->handle(null);
+        $tags = $tagQuery->handle();
 
+        return view('admin.posts.edit', [
+            'title' => 'Edit Post Page',
+            'post' => $post,
+            'categories' => $categories,
+            'tags' => $tags,
+        ]);
     }
 
     /**
