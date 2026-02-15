@@ -45,7 +45,7 @@
                                         name="title"
                                         class="form-control @error('title') is-invalid @enderror"
                                         id="inputName"
-                                        value="{{ old('name', $post->name) }}"
+                                        value="{{ old('title', $post->title) }}"
                                         placeholder="Enter post title"
                                         required>
                                     @error('name')
@@ -83,12 +83,12 @@
                                 </div>
 
                                 <!-- Image -->
-                                <div class="img-block">
+                                <div class="form-group img-block">
                                     <div id="current-image-wrapper">
                                         <figure class="tm-description-figure">
                                             <img src="{{ $post->imageUrl }}" alt="Post image" class="img-fluid rounded" />
                                         </figure>
-                                        <button type="button" class="btn tm-btn-default" id="replace-img-btn">Change image</button>
+                                        <button type="button" class="btn btn-info" id="replace-img-btn">Change image</button>
                                     </div>
                                     <div id="upload-image-wrapper" style="display: none;">
                                         <div class="form-group">
@@ -103,7 +103,7 @@
                                                 <label class="custom-file-label" for="inputFile">Choose file</label>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn tm-btn-primary" id="cancel-upload-btn">Cancel</button>
+                                        <button type="button" class="btn btn-danger" id="cancel-upload-btn">Cancel</button>
                                     </div>
                                 </div>
 
