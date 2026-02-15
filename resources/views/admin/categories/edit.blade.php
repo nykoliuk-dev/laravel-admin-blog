@@ -32,7 +32,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="{{ route('admin.categories.update', ['category' => $currentCategory->slug->getValue()]) }}" method="POST" id="tagForm">
+                        <form action="{{ route('admin.categories.update', ['category' => $currentCategory->slug->getValue()]) }}" method="POST" id="categoryForm">
                             @csrf
                             @method('PUT')
 
