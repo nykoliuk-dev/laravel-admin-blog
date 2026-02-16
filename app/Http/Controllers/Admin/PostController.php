@@ -7,15 +7,14 @@ use App\Domain\Posts\Commands\CreatePostCommand;
 use App\Domain\Posts\Commands\UpdatePostCommand;
 use App\Domain\Posts\Handlers\CreatePostHandler;
 use App\Domain\Posts\Handlers\UpdatePostHandler;
+use App\Domain\Posts\Queries\PostCommentsQuery;
 use App\Domain\Posts\Queries\PostDetailsQuery;
 use App\Domain\Posts\Queries\PostListQuery;
 use App\Domain\Tags\Queries\TagForSelectQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Models\Category;
 use App\Models\Post;
-use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -75,10 +74,23 @@ class PostController extends Controller
 
     /**
      * Display the specified resource.
+     * @param string $post slug of the post
      */
-    public function show()
+    public function show(Request $request, string $post, PostDetailsQuery $postQuery, PostCommentsQuery $commentsQuery): View
     {
+        $post = $postQuery->handle($post);
 
+        $commentPaginator = $commentsQuery->handle(
+            page: (int) $request->query('page', 1),
+            perPage: (int) $request->query('perPage', 3),
+            postId: $post->id,
+        );
+
+        return view('admin.posts.show', [
+            'title' => 'Post List Page',
+            'post' => $post,
+            'comments' => $commentPaginator,
+        ]);
     }
 
     /**
