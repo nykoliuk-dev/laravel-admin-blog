@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DeleteCommentController;
+use App\Http\Controllers\Admin\ListCommentsController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +22,11 @@ Route::prefix('admin')
             ]);
 
         // Comments
-        Route::resource('comments', CommentController::class)
-            ->scoped([
-                'comment' => 'slug',
-            ]);
+        Route::get('/comments', ListCommentsController::class)
+            ->name('comments.index');
+
+        Route::delete('/comments/{comment}', DeleteCommentController::class)
+            ->name('comments.destroy');
 
         // Tags
         Route::resource('tags', TagController::class)
