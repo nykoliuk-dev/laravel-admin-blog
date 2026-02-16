@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
@@ -17,6 +18,12 @@ Route::prefix('admin')
         Route::resource('posts', PostController::class)
             ->scoped([
                 'post' => 'slug',
+            ]);
+
+        // Comments
+        Route::resource('comments', CommentController::class)
+            ->scoped([
+                'comment' => 'slug',
             ]);
 
         // Tags
