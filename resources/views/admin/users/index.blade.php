@@ -39,6 +39,7 @@
                                         <th style="width: 10px">#</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Role</th>
                                         <th>Registered At</th>
                                         <th>Last Updated At</th>
                                         <th style="width: 40px">Actions</th>
@@ -50,6 +51,7 @@
                                             <td>{{ $user->id }}.</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
+                                            <td>{{ $user->rolesAsString() }}</td>
                                             <td>{{ $user->createdAt->format('d.m.Y H:i') }}</td>
                                             <td>{{ $user->updatedAt->format('d.m.Y H:i') }}</td>
                                             <td class="d-flex gap-2">
