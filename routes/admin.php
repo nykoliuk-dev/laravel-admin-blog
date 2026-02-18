@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DeleteCommentController;
 use App\Http\Controllers\Admin\ListCommentsController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -39,4 +40,7 @@ Route::prefix('admin')
             ->scoped([
                 'category' => 'slug',
             ]);
+
+        // Users
+        Route::resource('users', UserController::class);
     });
