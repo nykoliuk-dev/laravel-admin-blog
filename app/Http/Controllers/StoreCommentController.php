@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class StoreCommentController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(StoreCommentRequest $request)
     {
         $validated = $request->validated();

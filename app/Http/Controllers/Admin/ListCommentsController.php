@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 
 class ListCommentsController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(Request $request, ListCommentsQuery $query)
     {
         $commentPaginator = $query->handle(

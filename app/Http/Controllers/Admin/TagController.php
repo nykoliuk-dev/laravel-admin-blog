@@ -17,9 +17,6 @@ use Illuminate\Contracts\View\View;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request, TagListQuery $query): View
     {
         $tagPaginator = $query->handle(
@@ -35,17 +32,11 @@ class TagController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         return view('admin.tags.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTagRequest $request): RedirectResponse
     {
         $name = $request->validated('name');
@@ -60,9 +51,6 @@ class TagController extends Controller
             ->with('success', 'Tag created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, Tag $tag, TagPostsPaginatedQuery $query): View
     {
         $postPaginator = $query->handle(
@@ -78,9 +66,6 @@ class TagController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Tag $tag): View
     {
         return view('admin.tags.edit', [
@@ -89,9 +74,6 @@ class TagController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTagRequest $request, Tag $tag, UpdateTagHandler $handler): RedirectResponse
     {
         $command = new UpdateTagCommand(
@@ -107,9 +89,6 @@ class TagController extends Controller
             ->with('success', 'Tag updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Tag $tag): RedirectResponse
     {
         $tag->delete();

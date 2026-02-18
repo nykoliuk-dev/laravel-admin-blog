@@ -27,9 +27,6 @@ class PostController extends Controller implements HasMiddleware
         ];
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
         $posts = Post::latest()->get();
@@ -40,9 +37,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         Gate::authorize('create', Post::class);
@@ -57,9 +51,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePostRequest $request, CreatePostHandler $postHandler): JsonResponse
     {
         Gate::authorize('create', Post::class);
@@ -80,9 +71,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post): View
     {
         return view('posts.show', [
@@ -94,9 +82,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post): View
     {
         Gate::authorize('update', $post);
@@ -114,9 +99,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $postHandler)
     {
         Gate::authorize('update', $post);
@@ -139,9 +121,6 @@ class PostController extends Controller implements HasMiddleware
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post)
     {
         Gate::authorize('delete', Post::class);

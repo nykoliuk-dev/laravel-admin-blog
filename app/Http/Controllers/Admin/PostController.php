@@ -21,9 +21,6 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request, PostListQuery $query): View
     {
         $postPaginator = $query->handle(
@@ -37,9 +34,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(CategoryTreeQuery $categoryQuery, TagForSelectQuery $tagQuery): View
     {
         $categories = $categoryQuery->handle(null);
@@ -52,9 +46,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePostRequest $request, CreatePostHandler $postHandler): RedirectResponse
     {
         $postData = new CreatePostCommand(
@@ -73,7 +64,6 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
      * @param string $post slug of the post
      */
     public function show(Request $request, string $post, PostDetailsQuery $postQuery, PostCommentsQuery $commentsQuery): View
@@ -94,7 +84,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
      * @param string $post slug of the post
      */
     public function edit(
@@ -116,9 +105,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, Post $post, UpdatePostHandler $postHandler): RedirectResponse
     {
         $postData = new UpdatePostCommand(
@@ -138,9 +124,6 @@ class PostController extends Controller
             ->with('success', 'Post updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post): RedirectResponse
     {
         $post->delete();

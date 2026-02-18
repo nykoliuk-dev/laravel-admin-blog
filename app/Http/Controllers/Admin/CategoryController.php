@@ -18,9 +18,6 @@ use Illuminate\Contracts\View\View;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request, CategoryListQuery $query): View
     {
         $categoryPaginator = $query->handle(
@@ -34,9 +31,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(CategoryTreeQuery $query): View
     {
         $categoryTree = $query->handle(null);
@@ -47,9 +41,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -65,9 +56,6 @@ class CategoryController extends Controller
             ->with('success', 'Category created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, Category $category, CategoryPostsPaginatedQuery $query): View
     {
         $postPaginator = $query->handle(
@@ -83,9 +71,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(CategoryTreeQuery $query, Category $category): View
     {
         $categoryTree = $query->handle($category->id);
@@ -97,9 +82,6 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateCategoryRequest $request, string $category, UpdateCategoryHandler $handler): RedirectResponse
     {
         $command = new UpdateCategoryCommand(
@@ -116,9 +98,6 @@ class CategoryController extends Controller
             ->with('success', 'Category updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category): RedirectResponse
     {
         $category->delete();
