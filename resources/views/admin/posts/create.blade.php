@@ -46,7 +46,7 @@
                                         value="{{ old('title') }}"
                                         placeholder="Enter post title"
                                         required>
-                                    @error('name')
+                                    @error('title')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
