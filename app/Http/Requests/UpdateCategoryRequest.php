@@ -22,7 +22,7 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => 'required|min:4|unique:categories,name' . $this->route('category') . ',slug',
+            'name'          => 'required|min:4|unique:categories,name,' . $this->route('category') . ',slug',
             'parent_id'     => 'nullable|exists:categories,id',
             'editSlug'      => 'bool',
             'slug'          => 'required_if:editSlug,1|nullable|regex:/^[a-z0-9-]+$/|max:255',
