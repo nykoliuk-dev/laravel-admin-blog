@@ -4,21 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
-use Illuminate\Support\Facades\Log;
+use App\Models\Post;
 
 class StoreCommentController extends Controller
 {
-    public function __invoke(StoreCommentRequest $request)
+    public function __invoke(StoreCommentRequest $request, Post $post)
     {
-        $validated = $request->validated();
-
-        $validated['user_id'] = auth()->id();
-
-        $comment = Comment::query()->create()($validated);
+        $comment = $post->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $request->validated('content'),
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => "Комментарий успешно добавлен!",
+            'message' => 'Comment successfully added!',
+            'comment' => [
+                'content' => $comment->content,
+                'author' => $comment->user?->name ?? 'Гость',
+                'created_at' => $comment->created_at->format('d.m.Y H:i'),
+            ],
         ], 201);
     }
 }

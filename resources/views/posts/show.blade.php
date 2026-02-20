@@ -5,14 +5,14 @@
 @section('content')
 <header class="row tm-welcome-section">
     <h2 class="col-12 text-center tm-section-title">{{ $post->title }}</h2>
-    <p class="col-12 text-center">Просмотр статьи о еде и кулинарии.</p>
+    <p class="col-12 text-center">View article about food and cooking.</p>
 </header>
 
 @can('create', \App\Models\Post::class)
 <div class="tm-paging-links">
     <nav>
         <ul>
-            <li class="tm-paging-item"><a href="{{ route('posts.create') }}" class="tm-paging-link">Добавить статью</a></li>
+            <li class="tm-paging-item"><a href="{{ route('posts.create') }}" class="tm-paging-link">Add a post</a></li>
         </ul>
     </nav>
 </div>
@@ -20,38 +20,38 @@
 
 <div class="tm-section tm-container-inner">
     <div class="row">
-        <!-- Левая колонка: Изображение и Метаданные -->
+        <!-- Left Column: Image and Metadata -->
         <div class="col-md-6">
             <figure class="tm-description-figure">
                 <img src="{{ $post->image_url }}" alt="Изображение поста" class="img-fluid rounded" />
             </figure>
 
             <div class="mt-4 p-3 bg-gray-100 rounded shadow-sm">
-                <h5 class="font-bold mb-2 text-xl">Категории:</h5>
+                <h5 class="font-bold mb-2 text-xl">Categories:</h5>
                 <div class="flex flex-wrap gap-2">
                     @forelse($categories as $category)
                     <span class="px-3 py-1 bg-yellow-600 text-white rounded-full text-sm hover:bg-yellow-700 transition duration-300">
                                 {{ $category->name }}
                             </span>
                     @empty
-                    <span class="text-gray-500">Нет категорий</span>
+                    <span class="text-gray-500">No categories</span>
                     @endforelse
                 </div>
 
-                <h5 class="font-bold mt-4 mb-2 text-xl">Теги:</h5>
+                <h5 class="font-bold mt-4 mb-2 text-xl">Tegs:</h5>
                 <div class="flex flex-wrap gap-2">
                     @forelse($tags as $tag)
                     <span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm hover:bg-green-700 transition duration-300">
                                 #{{ $tag->name }}
                             </span>
                     @empty
-                    <span class="text-gray-500">Нет тегов</span>
+                    <span class="text-gray-500">No tags</span>
                     @endforelse
                 </div>
             </div>
         </div>
 
-        <!-- Правая колонка: Содержимое поста -->
+        <!-- Right column: Post content -->
         <div class="col-md-6">
             <div class="tm-description-box">
                 <h4 class="tm-gallery-title mb-4 text-3xl font-semibold">{{ $post->title }}</h4>
@@ -59,74 +59,62 @@
                     {{ $post->content }}
                 </div>
             </div>
+            <div class="row">
+                @can('update', $post)
+                    <div class="tm-feature">
+                        <i class="fas fa-4x fa-pepper-hot tm-feature-icon"></i>
+                        <a href="{{ route('posts.edit', ['post' => $post->slug->getValue()]) }}" class="tm-btn tm-btn-primary">Edit</a>
+                    </div>
+                @endcan
+                @can('delete', \App\Models\Post::class)
+                    <div class="tm-feature">
+                        <i class="fas fa-4x fa-cocktail tm-feature-icon"></i>
+                        <form method="POST" action="{{ route('posts.destroy', ['post' => $post->slug->getValue()]) }}">
+                            @csrf
+                            @method('delete')
+                            <button class="tm-btn tm-btn-danger">Delete</button>
+                        </form>
+                    </div>
+                @endcan
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        @can('update', $post)
-        <div class="col-lg-6">
-            <div class="tm-feature">
-                <i class="fas fa-4x fa-pepper-hot tm-feature-icon"></i>
-                <p class="tm-feature-description">Donec sed orci fermentum, convallis lacus id, tempus elit. Sed eu neque accumsan, porttitor arcu a, interdum est. Donec in risus eu ante.</p>
-                <a href="{{ route('posts.edit', ['post' => $post->slug->getValue()]) }}" class="tm-btn tm-btn-primary">Edit</a>
-            </div>
-        </div>
-        @endcan
-        @can('delete', \App\Models\Post::class)
-        <div class="col-lg-6">
-            <div class="tm-feature">
-                <i class="fas fa-4x fa-cocktail tm-feature-icon"></i>
-                <p class="tm-feature-description">Morbi in dolor finibus, consequat nisl eget, pretium nunc. Maecenas pretium rutrum molestie. Duis dignissim egestas turpis sit.</p>
-                <form method="POST" action="{{ route('posts.destroy', ['post' => $post->slug->getValue()]) }}">
-                    @csrf
-                    @method('delete')
-                    <button class="tm-btn tm-btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-        @endcan
-    </div>
-
-    <!-- Секция Комментарии -->
+    <!-- Section Comments -->
     <div class="row mt-10">
         <div class="col-12" id="comments-section">
-            <h3 class="text-3xl font-bold mb-6 border-b pb-2">Комментарии</h3>
+            <h3 class="text-3xl font-bold mb-6 border-b pb-2">Comments</h3>
 
-            <!-- Список комментариев -->
+            <!-- List of comments -->
             @forelse($comments as $comment)
             <div class="mb-4 p-4 bg-white rounded shadow-md border-l-4 border-yellow-600 comment-item">
                 <p class="text-gray-700 mb-2">{{ $comment->content }}</p>
                 <p class="text-sm text-gray-500">
-                    — Автор:
-                    @if($comment->user_id !== null)
-                    **Пользователь ID: {{ $comment->user_id }}**
-                    @else
-                    **Гость**
-                    @endif
+                    — Author:
+                    **{{ $comment->user?->name ?? 'Guest' }}**
                     <span class="ml-2">({{ $comment->created_at }})</span>
                 </p>
             </div>
             @empty
-            <p class="text-gray-600" id="no-comments-message">Пока нет комментариев. Будьте первым, кто оставит отзыв!</p>
+            <p class="text-gray-600" id="no-comments-message">There are no comments yet. Be the first to leave a review!</p>
             @endforelse
 
-            <!-- Форма добавления комментария -->
+            <!-- Comment form -->
             <div class="mt-8 p-5 bg-gray-50 rounded shadow">
-                <h4 class="text-xl font-semibold mb-4">Оставить комментарий</h4>
+                <h4 class="text-xl font-semibold mb-4">Leave a comment</h4>
 
                 <div id="comment-message" class="mb-4 hidden p-3 rounded text-white font-bold"></div>
 
                 <form id="comment-form" action="{{ route('posts.comments.store', $post) }}" method="POST">
                     @csrf
-                    <input type="hidden" name="post_id" value="{{ $post->id }}">
                     <div class="mb-4">
-                        <label for="content" class="block text-gray-700 font-medium mb-2">Ваш комментарий:</label>
+                        <label for="content" class="block text-gray-700 font-medium mb-2">Your comment:</label>
                         <textarea id="content" name="content" rows="4" class="w-full p-3 border border-gray-300 rounded focus:ring-yellow-500 focus:border-yellow-500" required></textarea>
                         <div id="content-error" class="text-red-500 text-sm mt-1"></div>
                     </div>
 
                     <button type="submit" class="tm-btn tm-btn-success">
-                        Отправить комментарий
+                        Leave a comment
                     </button>
                 </form>
             </div>
@@ -166,6 +154,10 @@
             try {
                 const safeResponse = await fetch(form.action, {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
                     body: formData
                 });
 
@@ -217,7 +209,7 @@
                 }
             } catch (error) {
                 console.error('Fetch error:', error);
-                messageBox.textContent = 'Ошибка сети. Не удалось отправить комментарий.';
+                messageBox.textContent = 'Network error. Unable to send comment.';
                 messageBox.classList.remove('hidden');
                 messageBox.classList.add('bg-red-500');
             }
