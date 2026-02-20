@@ -46,9 +46,9 @@ class CategoryController extends Controller
         $data = $request->validated();
 
         Category::query()->create([
-            'name' => $data('name'),
-            'slug' => Slug::createFromString($data('name')),
-            'parent_id' => $data('parent_id'),
+            'name' => $data['name'],
+            'slug' => Slug::createFromString($data['name']),
+            'parent_id' => $data['parent_id'],
         ]);
 
         return redirect()
