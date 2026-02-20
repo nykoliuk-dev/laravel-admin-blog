@@ -43,7 +43,7 @@
                                         name="title"
                                         class="form-control @error('title') is-invalid @enderror"
                                         id="inputName"
-                                        value="{{ old('name') }}"
+                                        value="{{ old('title') }}"
                                         placeholder="Enter post title"
                                         required>
                                     @error('name')
