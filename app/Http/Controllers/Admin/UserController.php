@@ -41,9 +41,26 @@ class UserController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(StoreUserRequest $request, CreateUserHandler $userHandler): RedirectResponse
     {
+        $data = $request->validated();
 
+        $roles = array_map(
+            fn(string $role) => RoleSlug::tryFrom($role),
+            $data['roles'] ?? []
+        );
+
+        $command = new CreateUserCommand(
+            name: $data['name'],
+            email: $data['email'],
+            password: $data['password'],
+            roles: $roles,
+        );
+        $userHandler->handle($command);
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'User created successfully');
     }
 
     public function show()
