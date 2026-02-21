@@ -3,10 +3,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Domain\Users\Commands\CreateUserCommand;
+use App\Domain\Users\Handlers\CreateUserHandler;
 use App\Domain\Users\Queries\UserListQuery;
+use App\Enums\RoleSlug;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,9 +33,12 @@ class UserController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): View
     {
-
+        return view('admin.users.create', [
+            'title' => 'Create New User',
+            'roles' => RoleSlug::cases(),
+        ]);
     }
 
     public function store()
