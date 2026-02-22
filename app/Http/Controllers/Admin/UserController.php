@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Users\Commands\CreateUserCommand;
 use App\Domain\Users\Handlers\CreateUserHandler;
+use App\Domain\Users\Queries\GetUserProfileQuery;
 use App\Domain\Users\Queries\UserListQuery;
 use App\Enums\RoleSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -63,9 +62,21 @@ class UserController extends Controller
             ->with('success', 'User created successfully');
     }
 
-    public function show()
+    public function show(Request $request, int $id, GetUserProfileQuery $query): View
     {
+        $result = $query->handle(
+            userId: $id,
+            postsPage: (int) $request->query('posts_page', 1),
+            commentsPage: (int) $request->query('comments_page', 1),
+            perPage: min(max(1, (int) $request->query('perPage', 3)), 100),
+        );
 
+        return view('admin.users.show', [
+            'title' => 'User Page',
+            'user' => $result->user,
+            'posts' => $result->posts,
+            'comments' => $result->comments,
+        ]);
     }
 
     public function edit()
