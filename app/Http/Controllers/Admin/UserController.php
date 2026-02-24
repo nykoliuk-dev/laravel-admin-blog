@@ -4,15 +4,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Users\Commands\CreateUserCommand;
+use App\Domain\Users\DTO\UserViewDTO;
 use App\Domain\Users\Handlers\CreateUserHandler;
 use App\Domain\Users\Queries\GetUserProfileQuery;
 use App\Domain\Users\Queries\UserListQuery;
 use App\Enums\RoleSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -79,9 +84,22 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit()
+    public function edit(User $user): View
     {
+        Gate::authorize('update', $user);
 
+        return view('admin.users.edit', [
+            'title' => 'Edit User Page',
+            'user' => new UserViewDTO(
+                id: $user->id,
+                name: $user->name,
+                email: $user->email,
+                roles: $user->roles->map(fn (Role $role) => $role->slug)->all(),
+                createdAt: $user->created_at->toImmutable(),
+                updatedAt: $user->updated_at->toImmutable(),
+            ),
+            'roles' => RoleSlug::cases(),
+        ]);
     }
 
     public function update()
