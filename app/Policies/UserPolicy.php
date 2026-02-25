@@ -55,4 +55,19 @@ class UserPolicy
 
         return false;
     }
+
+    public function allowedRoles(User $auth, User $target): array
+    {
+        if ($auth->isAdmin()) {
+            return RoleSlug::cases();
+        }
+
+        if ($auth->isEditor()) {
+            return [RoleSlug::EDITOR];
+        }
+
+        return [];
+    }
+
+
 }

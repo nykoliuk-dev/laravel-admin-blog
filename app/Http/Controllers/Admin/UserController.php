@@ -14,6 +14,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Policies\UserPolicy;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -84,9 +85,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit(User $user): View
+    public function edit(User $user, UserPolicy $policy): View
     {
         Gate::authorize('update', $user);
+
+        /** @var User $auth */
+        $auth = auth()->user();
+        $allowedRoles = $policy->allowedRoles($auth, $user);
 
         return view('admin.users.edit', [
             'title' => 'Edit User Page',
@@ -98,7 +103,8 @@ class UserController extends Controller
                 createdAt: $user->created_at->toImmutable(),
                 updatedAt: $user->updated_at->toImmutable(),
             ),
-            'roles' => RoleSlug::cases(),
+            'canEditRole' => $auth->can('changeRole', $user),
+            'roles' => $allowedRoles,
         ]);
     }
 
