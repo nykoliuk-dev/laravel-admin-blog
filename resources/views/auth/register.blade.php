@@ -1,52 +1,90 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends ('layouts.app')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@section('title', 'Register Page')
+
+@section('content')
+<header class="row tm-welcome-section">
+    <h2 class="col-12 text-center tm-section-title">Create an account</h2>
+    <p class="col-12 text-center">
+        Register to get access to all features of the blog.
+    </p>
+</header>
+
+<div class="tm-container-inner-2 tm-contact-section">
+    <div class="row">
+        <div class="col-12">
+            <form id="registerForm" action="{{ route('register') }}" method="POST" class="tm-contact-form">
+                @csrf
+
+                <div id="form-messages"></div>
+
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control" placeholder="Your name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm password" required>
+                </div>
+
+                <div class="form-group tm-d-flex">
+                    <button type="submit" class="tm-btn tm-btn-success tm-btn-right">Register</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+@endsection
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@push('scripts')
+<script>
+    $(function () {
+        $('#registerForm').on('submit', function (e) {
+            e.preventDefault();
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            let form = $(this);
+            let formData = form.serialize();
+            let messages = $('#form-messages');
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'Accept': 'application/json'
+                },
+                success: function (response) {
+                    messages
+                        .removeClass('tm-text-danger')
+                        .addClass('tm-text-success')
+                        .html(`${response.message}`);
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                    form[0].reset();
+                },
+                error: function (xhr) {
+                    let res = xhr.responseJSON;
+                    messages.removeClass('tm-text-success').addClass('tm-text-danger');
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+                    if (res && res.errors) {
+                        let html = '<ul>';
+                        for (const [field, errors] of Object.entries(res.errors)) {
+                            html += `<li>${errors.join('<br>')}</li>`;
+                        }
+                        html += '</ul>';
+                        messages.html(html);
+                    } else {
+                        messages.html('<p>Произошла ошибка при отправке формы.</p>');
+                    }
+                }
+            });
+        });
+    });
+</script>
+@endpush

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Domain\Posts\Handlers;
 
 use App\Domain\Posts\Commands\CreatePostCommand;
+use App\Domain\Posts\Services\PostImageService;
 use App\Models\Post;
 use App\ValueObjects\Slug;
 use Illuminate\Support\Facades\DB;
@@ -12,18 +13,17 @@ use Illuminate\Support\Str;
 
 class CreatePostHandler
 {
+    public function __construct(
+        private PostImageService $imageService
+    ) {}
     public function handle(CreatePostCommand $data): Post
     {
         return DB::transaction(function () use ($data) {
-            $filename = Str::uuid() . '.' . $data->file->getClientOriginalExtension();
-            $subPath = now()->format('Y/m');
-            $path = Post::UPLOAD_DIRECTORY . '/' . $subPath;
-            Storage::disk('public')->putFileAs($path, $data->file, $filename);
-            $imagePath = $subPath . '/' . $filename;
+            $imagePath = $this->imageService->upload($data->file, Post::UPLOAD_DIRECTORY);
 
             $post = Post::create([
                 'title'      => $data->title,
-                'slug'       => new Slug(Str::slug($data->title)),
+                'slug'       => Slug::createFromString($data->title),
                 'content'    => $data->content,
                 'image_name' => $imagePath,
                 'user_id'    => $data->userId,

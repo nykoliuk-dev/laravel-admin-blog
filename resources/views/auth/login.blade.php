@@ -1,47 +1,96 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends ('layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Login Page')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+@section('content')
+<header class="row tm-welcome-section">
+    <h2 class="col-12 text-center tm-section-title">Login</h2>
+    <p class="col-12 text-center">
+        Enter your email and password to access your account.
+    </p>
+</header>
+
+<div class="tm-container-inner-2 tm-contact-section">
+    <div class="row">
+        <div class="col-12">
+            <form id="loginForm" action="{{ route('login') }}" method="POST" class="tm-contact-form">
+
+                @csrf
+
+                <div id="form-messages"></div>
+
+                <div class="form-group">
+                    <input type="email"
+                           name="email"
+                           class="form-control"
+                           placeholder="Email"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Password"
+                           required>
+                </div>
+
+                <div class="form-group tm-d-flex">
+                    <button type="submit" class="tm-btn tm-btn-success tm-btn-right">
+                        Login
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+@endsection
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+@push('scripts')
+<script>
+    $(function () {
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault();
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            let form = $(this);
+            let messages = $('#form-messages');
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                headers: {
+                    'Accept': 'application/json'
+                },
+                success: function (response) {
+                    messages
+                        .removeClass('tm-text-danger')
+                        .addClass('tm-text-success')
+                        .html(response.message);
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+                    // Просто редирект после успешного входа
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 800);
+                },
+                error: function (xhr) {
+                    let res = xhr.responseJSON;
+                    messages.removeClass('tm-text-success').addClass('tm-text-danger');
+                    console.log(xhr);
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+                    if (res && res.errors) {
+                        let html = '<ul>';
+                        for (const err of res.errors) {
+                            html += `<li>${err}</li>`;
+                        }
+                        html += '</ul>';
+                        messages.html(html);
+                    } else {
+                        messages.html('<p>Произошла ошибка при авторизации.</p>');
+                    }
+                }
+            });
+        });
+    });
+</script>
+@endpush
