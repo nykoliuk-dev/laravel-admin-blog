@@ -1,59 +1,164 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Laravel Admin Blog
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A full-featured blog with an admin panel built on Laravel, demonstrating engineering-level architecture, CQRS-lite, immutable Commands, Handlers, DTOs, Policies, and strict role management with Enums.
 
-## About Laravel
+Admin panel: AdminLTE 3 (standard page reload forms).
+Public site: AJAX endpoints for post creation/update with json middleware.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+📌 Project Goal
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Showcase production-ready Laravel architecture with clean separation of concerns.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Demonstrate admin panel functionality, role-based authorization, custom pagination, DTOs for read-layer, and strict Commands/Handlers for writes.
 
-## Learning Laravel
+Maintain readable, maintainable, and explicit code without magic or hidden defaults.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+⚙️ Stack & Technologies
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Back-end: Laravel (MVC as infrastructure, Handlers, Commands, DTOs, CQRS-lite, Policies)
 
-## Laravel Sponsors
+Admin Frontend: AdminLTE 3, Blade, native JS + jQuery
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Database: MySQL/PostgreSQL via Eloquent ORM, migrations
 
-### Premium Partners
+Authorization: Policies + Gates, role-based access, admin-only middleware
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Middleware: json (public AJAX endpoints), admin (admin panel access)
 
-## Contributing
+Frontend components: custom pagination (no Tailwind), forms, AdminLTE styling
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+🏗 Architecture & Approach
 
-## Code of Conduct
+CQRS-lite: separation of write (Commands/Handlers) and read (Queries/DTOs) layers.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Immutable Commands: readonly/final, no default values, minimal nullable types.
 
-## Security Vulnerabilities
+DTOs: presentation-only, prevent models from leaking into views.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Policies: enforce role-based access and edge-cases (update, delete, changeRole, assignRole).
 
-## License
+Value Objects (VOs): e.g., Slug for strict handling of post identifiers.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Enums: RoleSlug for controlled role assignments.
+
+Middleware separation: AJAX for public endpoints; standard forms for admin.
+
+Frontend: custom components with JS/jQuery, AdminLTE styling, AJAX where appropriate.
+
+🛠 Example: Update User Flow
+Command
+final readonly class UpdateUserCommand
+{
+public function __construct(
+public int $userId,
+public string $name,
+public string $email,
+public ?array $roles,
+) {}
+}
+Handler
+class UpdateUserHandler
+{
+public function handle(UpdateUserCommand $command): UserViewDTO
+{
+// Explicit query
+$user = User::query()
+->where('id', $command->userId)
+->firstOrFail();
+
+        $user->update([
+            'name' => $command->name,
+            'email' => $command->email,
+        ]);
+
+        // Roles updated separately through Policy/Service
+        if ($command->roles !== null) {
+            $user->syncRoles($command->roles);
+        }
+
+        return new UserViewDTO($user);
+    }
+}
+DTO
+final readonly class UserViewDTO
+{
+public function __construct(
+public int $id,
+public string $name,
+public string $email,
+public array $roles,
+) {}
+}
+
+Demonstrates engineering-style CQRS-lite: immutable Commands, explicit queries, separation of concerns, and DTOs for output only.
+
+📄 Policies
+
+UserPolicy enforces edge-cases and role hierarchy:
+
+Users cannot change their own roles
+
+Admin can manage everyone except other admins
+
+Editor can manage only normal users, not admins or editors
+
+Methods include: update, delete, changeRole, allowedRoles, assignRole
+
+Applied via Gate / can() in controllers and Blade templates
+
+🔹 Read Layer & Queries
+
+Queries (UserListQuery, PostListQuery) are read-only
+
+Return DTOs for presentation layer
+
+Separation ensures no side-effects during reads
+
+📌 Project Features
+
+Pagination: custom component, independent of Tailwind
+
+Enums: RoleSlug for strict role assignments
+
+Value Objects: Slug VO for consistent post identifiers
+
+AJAX: public post endpoints with json middleware
+
+Middleware: admin-only for admin panel
+
+Frontend: AdminLTE 3, custom forms, native JS + jQuery
+
+🚀 Local Setup
+git clone https://github.com/nykoliuk-dev/laravel-admin-blog.git
+cd laravel-admin-blog
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+🧪 Testing
+
+Unit and integration tests planned for Laravel project.
+
+Handlers, Policies, Queries will be covered once tests are added:
+
+php artisan test
+👨‍💻 Skills & Approach
+
+Explicit, readable code; no hidden magic, no default nullable values.
+
+CQRS-lite: immutable Commands, Handlers, Queries, DTOs.
+
+Policies enforce role-based edge-cases.
+
+VO + Enum demonstrate strict type control and DDD discipline.
+
+Middleware enforces route separation (admin vs public AJAX).
+
+Custom frontend components: AdminLTE 3, JS/jQuery, custom pagination.
+
+🔗 Contacts
+
+LinkedIn
+
+GitHub
