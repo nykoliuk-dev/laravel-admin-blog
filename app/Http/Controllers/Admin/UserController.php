@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Users\Commands\CreateUserCommand;
+use App\Domain\Users\Commands\UpdateUserCommand;
 use App\Domain\Users\DTO\UserViewDTO;
 use App\Domain\Users\Handlers\CreateUserHandler;
+use App\Domain\Users\Handlers\UpdateUserHandler;
 use App\Domain\Users\Queries\GetUserProfileQuery;
 use App\Domain\Users\Queries\UserListQuery;
 use App\Enums\RoleSlug;
@@ -108,9 +110,24 @@ class UserController extends Controller
         ]);
     }
 
-    public function update()
+    public function update(int $id, UpdateUserRequest $request, UpdateUserHandler $userHandler): RedirectResponse
     {
+        $data = $request->validated();
 
+        $roles = $request->has('roles_present')
+            ? ($data['roles'] ?? [])
+            : null;
+
+        $userHandler->handle(new UpdateUserCommand(
+            userId: $id,
+            name: $data['name'],
+            email: $data['email'],
+            roles: $roles,
+        ));
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'User updated successfully');
     }
 
     public function destroy()

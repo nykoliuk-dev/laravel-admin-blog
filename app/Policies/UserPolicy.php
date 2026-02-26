@@ -69,5 +69,17 @@ class UserPolicy
         return [];
     }
 
+    public function assignRole(User $auth, User $target, RoleSlug $newRole): bool
+    {
+        if ($auth->isAdmin()) {
+            return true;
+        }
 
+        if ($auth->isEditor()) {
+            return $target->isUser()
+                && $newRole !== RoleSlug::ADMIN;
+        }
+
+        return false;
+    }
 }

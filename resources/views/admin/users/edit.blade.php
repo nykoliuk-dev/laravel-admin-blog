@@ -64,6 +64,8 @@
                                     @enderror
                                 </div>
                                 @if($canEditRole)
+                                    <input type="hidden" name="roles_present" value="1">
+
                                     <div class="form-group">
                                         <label for="user-role-select">Select User Roles</label>
                                         <select
