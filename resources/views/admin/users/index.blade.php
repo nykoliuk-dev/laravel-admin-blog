@@ -48,25 +48,38 @@
                                     <tbody>
                                     @foreach($users as $user)
                                         <tr>
-                                            <td>{{ $user->id }}.</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->rolesAsString() }}</td>
-                                            <td>{{ $user->createdAt->format('d.m.Y H:i') }}</td>
-                                            <td>{{ $user->updatedAt->format('d.m.Y H:i') }}</td>
+                                            <td>{{ $user->dto->id }}.</td>
+                                            <td>{{ $user->dto->name }}</td>
+                                            <td>{{ $user->dto->email }}</td>
+                                            <td>{{ $user->dto->rolesAsString() }}</td>
+                                            <td>{{ $user->dto->createdAt->format('d.m.Y H:i') }}</td>
+                                            <td>{{ $user->dto->updatedAt->format('d.m.Y H:i') }}</td>
                                             <td class="d-flex gap-2">
-                                                <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-outline-info btn-sm mx-1">
+                                                <a href="{{ route('admin.users.show', $user->dto->id) }}" class="btn btn-outline-info btn-sm mx-1">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-outline-warning btn-sm mx-1">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </a>
-                                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" >
+                                                @if($user->canUpdate)
+                                                    <a href="{{ route('admin.users.edit', $user->dto->id) }}" class="btn btn-outline-warning btn-sm mx-1">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                @else
+                                                    <span class="btn btn-outline-warning btn-sm mx-1 disabled">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </span>
+                                                @endif
+                                                <form action="{{ route('admin.users.destroy', $user->dto->id) }}" method="POST" >
                                                     @csrf
                                                     @method('delete')
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm mx-1" onclick="return confirm('Are you sure?')">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
+                                                    @if($user->canDelete)
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm mx-1" onclick="return confirm('Are you sure?')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    @else
+                                                        <span class="btn btn-outline-danger btn-sm mx-1 disabled">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </span>
+                                                    @endif
+
                                                 </form>
                                             </td>
                                         </tr>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Domain\Users\Commands\CreateUserCommand;
 use App\Domain\Users\Commands\UpdateUserCommand;
+use App\Domain\Users\DTO\UserListItemDTO;
 use App\Domain\Users\DTO\UserViewDTO;
 use App\Domain\Users\Handlers\CreateUserHandler;
 use App\Domain\Users\Handlers\UpdateUserHandler;
@@ -29,10 +30,16 @@ class UserController extends Controller
         $page = (int) $request->query('page', 1);
         $perPage = min(max(1, (int) $request->query('perPage', 3)), 100);
 
+        $auth = auth()->user();
+
         $userPaginator = $query->handle(
             page: $page,
             perPage: $perPage,
-        );
+        )->through(fn($item) => new UserListItemDTO(
+            dto: $item['dto'],
+            canUpdate: $auth->can('update', $item['raw']),
+            canDelete: $auth->can('delete', $item['raw']),
+        ));
 
         return view('admin.users.index', [
             'title' => 'User List Page',
