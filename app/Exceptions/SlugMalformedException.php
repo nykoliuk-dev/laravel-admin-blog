@@ -7,6 +7,6 @@ final class SlugMalformedException extends DomainException
 {
     public static function fromString(string $slug): self
     {
-        return new self("Строка '{$slug}' не является валидным слагом. Допустимы только строчные латинские буквы, цифры и дефис.");
+        return new self("The string '{$slug}' is not a valid slug. Only lowercase Latin letters, numbers, and hyphens are allowed.");
     }
 }

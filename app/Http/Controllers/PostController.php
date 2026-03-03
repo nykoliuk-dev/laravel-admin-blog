@@ -32,7 +32,7 @@ class PostController extends Controller implements HasMiddleware
         $posts = Post::latest()->get();
 
         return view('posts.index', [
-            'title' => 'Список постов',
+            'title' => 'Post List',
             'posts' => $posts,
         ]);
     }
@@ -45,7 +45,7 @@ class PostController extends Controller implements HasMiddleware
         $tags = Tag::all();
 
         return view('posts.create', [
-            'title' => 'Добавить статью',
+            'title' => 'Add Post',
             'categories' => $categories,
             'tags' => $tags,
         ]);
@@ -67,7 +67,7 @@ class PostController extends Controller implements HasMiddleware
 
         return response()->json([
             'success' => true,
-            'message' => "Пост {$post->id} успешно добавлен!",
+            'message' => "Post {$post->id} created successfully!",
         ]);
     }
 
@@ -117,7 +117,7 @@ class PostController extends Controller implements HasMiddleware
 
         return response()->json([
             'success' => true,
-            'message' => "Пост {$post->id} успешно обновлен!",
+            'message' => "Post {$post->id} updated successfully!",
         ]);
     }
 

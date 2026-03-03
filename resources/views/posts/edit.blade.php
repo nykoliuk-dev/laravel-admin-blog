@@ -33,9 +33,9 @@
                     <div class="col-12 img-block">
                         <div id="current-image-wrapper">
                             <figure class="tm-description-figure">
-                                <img src="{{ $post->image_url }}" alt="Изображение поста" class="img-fluid rounded" />
+                                <img src="{{ $post->image_url }}" alt="Post image" class="img-fluid rounded" />
                             </figure>
-                            <button type="button" class="btn tm-btn-default" id="replace-img-btn">Заменить изображение</button>
+                            <button type="button" class="btn tm-btn-default" id="replace-img-btn">Replace image</button>
                         </div>
                         <div id="upload-image-wrapper" style="display: none;">
                             <div class="form-group">

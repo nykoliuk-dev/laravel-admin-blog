@@ -68,7 +68,7 @@
                         .addClass('tm-text-success')
                         .html(response.message);
 
-                    // Просто редирект после успешного входа
+                    // A redirect after successful login
                     setTimeout(() => {
                         window.location.href = '/';
                     }, 800);
@@ -86,7 +86,7 @@
                         html += '</ul>';
                         messages.html(html);
                     } else {
-                        messages.html('<p>Произошла ошибка при авторизации.</p>');
+                        messages.html('<p>An error occurred while logging in.</p>');
                     }
                 }
             });

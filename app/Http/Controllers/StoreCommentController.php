@@ -20,7 +20,7 @@ class StoreCommentController extends Controller
             'message' => 'Comment successfully added!',
             'comment' => [
                 'content' => $comment->content,
-                'author' => $comment->user?->name ?? 'Гость',
+                'author' => $comment->user?->name ?? 'Guest',
                 'created_at' => $comment->created_at->format('d.m.Y H:i'),
             ],
         ], 201);

@@ -12,7 +12,7 @@ class HomeController extends Controller
         $posts = Post::all();
 
         return view('posts.index', [
-            'title' => 'Список постов',
+            'title' => 'Post List',
             'posts' => $posts,
         ]);
     }

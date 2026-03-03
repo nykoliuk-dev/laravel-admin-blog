@@ -80,7 +80,7 @@
                         html += '</ul>';
                         messages.html(html);
                     } else {
-                        messages.html('<p>Произошла ошибка при отправке формы.</p>');
+                        messages.html('<p>There was an error submitting the form.</p>');
                     }
                 }
             });

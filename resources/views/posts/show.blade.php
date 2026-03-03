@@ -135,7 +135,7 @@
         const noCommentsMessage = document.getElementById('no-comments-message');
 
         const currentUserId = @json(auth()->id());
-        const authorText = currentUserId !== null ? `**Пользователь ID: ${currentUserId}**` : `**Гость**`;
+        const authorText = currentUserId !== null ? `**User ID: ${currentUserId}**` : `**Guest**`;
 
         function clearErrors() {
             contentError.textContent = '';
@@ -165,11 +165,11 @@
 
                 if (!safeResponse.ok || !result.success) {
 
-                    let errorMessage = 'Неизвестная ошибка сервера.';
+                    let errorMessage = 'Unknown server error.';
                     if (result.errors) {
                         if (result.errors.content) {
                             contentError.textContent = result.errors.content;
-                            errorMessage = 'Ошибка валидации.';
+                            errorMessage = 'Validation error.';
                         } else if (result.errors.system) {
                             errorMessage = result.errors.system;
                         }
@@ -180,7 +180,7 @@
                     messageBox.classList.add('bg-red-500');
 
                 } else {
-                    messageBox.textContent = result.message || 'Комментарий успешно добавлен.';
+                    messageBox.textContent = result.message || 'Comment added successfully.';
                     messageBox.classList.remove('hidden');
                     messageBox.classList.add('bg-green-500');
 
