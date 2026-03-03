@@ -14,15 +14,11 @@ use Illuminate\Support\Facades\DB;
 class ImportOldBlogData extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'blog:import-old';
 
     /**
-     * The console command description.
-     *
      * @var string
      */
     protected $description = 'Import data from old blog database';
